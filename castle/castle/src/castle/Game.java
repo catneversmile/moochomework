@@ -2,6 +2,8 @@ package castle;
 
 import java.util.Scanner;
 
+import sun.util.resources.cldr.en.CurrencyNames_en_TT;
+
 public class Game {
     private Room currentRoom;
         
@@ -22,12 +24,16 @@ public class Game {
         bedroom = new Room("卧室");
         
         //	初始化房间的出口
-        outside.setExits(null, lobby, study, pub);
-        lobby.setExits(null, null, null, outside);
-        pub.setExits(null, outside, null, null);
-        study.setExits(outside, bedroom, null, null);
-        bedroom.setExits(null, null, null, study);
-
+        outside.setExit("east",lobby);
+        outside.setExit("south",study);
+        outside.setExit("west",pub);
+        lobby.setExit("west",outside);
+        pub.setExit("east",outside);
+        study.setExit("north",outside);
+        study.setExit("east",bedroom);
+        bedroom.setExit("west",study);
+        lobby.setExit("up",pub);
+        pub.setExit("down",lobby);
         currentRoom = outside;  //	从城堡门外开始
     }
 
@@ -50,39 +56,20 @@ public class Game {
 
     private void goRoom(String direction) 
     {
-        Room nextRoom = null;
-        if(direction.equals("north")) {
-            nextRoom = currentRoom.northExit;
+        Room nextRoom = currentRoom.getExit(direction);
+        if(nextRoom == null){
+        	System.out.println("那里没有门");
         }
-        if(direction.equals("east")) {
-            nextRoom = currentRoom.eastExit;
-        }
-        if(direction.equals("south")) {
-            nextRoom = currentRoom.southExit;
-        }
-        if(direction.equals("west")) {
-            nextRoom = currentRoom.westExit;
-        }
-
-        if (nextRoom == null) {
-            System.out.println("那里没有门！");
-        }
-        else {
-            currentRoom = nextRoom;           
+        else{
+        	currentRoom = nextRoom;
+        	showpromp();
         }
     }
     
     public void showpromp(){
     	 System.out.println("你在" + currentRoom);
          System.out.print("出口有: ");
-         if(currentRoom.northExit != null)
-             System.out.print("north ");
-         if(currentRoom.eastExit != null)
-             System.out.print("east ");
-         if(currentRoom.southExit != null)
-             System.out.print("south ");
-         if(currentRoom.westExit != null)
-             System.out.print("west ");
+         System.out.println(currentRoom.getExitDisc());
          System.out.println();
     }
 	
