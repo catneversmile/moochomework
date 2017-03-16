@@ -5,12 +5,12 @@ import java.util.HashMap;
 public class Room {
     private String description;
     private HashMap<String, Room> exits = new HashMap<String,Room>();
-
+   
     public Room(String description) 
     {
         this.description = description;
     }
-    
+
     public void setExit(String dir,Room room){
     	exits.put(dir, room);
     }
@@ -31,6 +31,18 @@ public class Room {
     }
     
     public Room getExit(String direction){
-    	return exits.get(direction);      	        
+    	return exits.get(direction);    	        
     }
+    
+    public String getDes(){
+    	return description;
+    }
+    //进入房间有1/10概率被传送到其它房间
+    public boolean portal(){
+    	boolean a = false;
+    	if(Math.random()<0.3){
+    		a=true;
+    	}	
+    	return a;
+    }	
 }
